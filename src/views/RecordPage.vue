@@ -1,8 +1,16 @@
 <template>
     <div class="record-container" v-if="listData.length>0">
         <div class="record-list">
-            <router-link :to="'/matchList?id='+item.recordId" class="list-item" v-for="item in listData">
-                <div class="date">试算时间：<span>{{item.accessTime}}</span></div>
+            <router-link :to="'/matchList?id='+item.recordId+'&from=true'" replace class="list-item"
+                         v-for="item in listData">
+                <!--<div class="date">试算时间：<span>{{item.accessTime}}</span></div>-->
+                <div class="item-btm">
+                    <div class="num">试算时间：<span>{{item.accessTime}}</span></div>
+                    <div class="delete-btn">
+                        <!--<span>删除</span>-->
+                        <img @click.prevent.stop="deleteHandler(item.recordId)" src="../assets/img/delete.png" alt="">
+                    </div>
+                </div>
                 <div class="item-btm">
                     <div class="num">可补贴政策数：<span>{{item.projectNum}}条</span></div>
                     <div class="detail-btn">
@@ -22,11 +30,16 @@
 </template>
 
 <script lang="ts">
-    import {getRecordList} from "@/utils/api";
+    import {getRecordList, deleteRecord} from "@/utils/api";
     import {defineComponent, onMounted, reactive, toRef} from 'vue'
+
+    import {Toast, Dialog} from 'vant'
+    import 'vant/lib/toast/style/index'
+    import 'vant/lib/dialog/style/index'
 
     export default defineComponent({
         name: 'RecordPage',
+
         setup() {
 
             let reactiveData = reactive({
@@ -43,8 +56,36 @@
                     reactiveData.listData = res.data.result
                 })
             })
+
+            function deleteHandler(id: number) {
+
+                Dialog.confirm({
+                    title: '您确认删除该条记录吗？',
+                })
+                    .then(() => {
+                        let prm = {
+                            recordId: id
+                        }
+                        deleteRecord(prm).then(res => {
+                            if (res.data.code === 200) {
+                                Toast.success(res.data.msg)
+                                let userCode = localStorage.getItem('policyMatchUserCode')
+                                let prm = {
+                                    userCode
+                                }
+                                getRecordList(prm).then(res => {
+                                    reactiveData.listData = res.data.result
+                                })
+                            }
+                        })
+                    })
+
+
+            }
+
             return {
-                listData: toRef(reactiveData, 'listData')
+                listData: toRef(reactiveData, 'listData'),
+                deleteHandler
             }
         }
     })
@@ -83,6 +124,11 @@
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
+                    margin: 0 0 4vw 0;
+
+                    &:last-child {
+                        margin: 0;
+                    }
 
                     .detail-btn {
                         span {
@@ -98,11 +144,29 @@
 
                         }
                     }
+
+                    .delete-btn {
+                        display: flex;
+                        align-items: center;
+
+                        span {
+                            font-size: 14px;
+                            font-family: PingFangSC-Regular, PingFang SC;
+                            color: #d81e06;
+                        }
+
+                        img {
+                            width: 16px;
+                            height: auto;
+                            margin-left: 1.6vw;
+                        }
+                    }
                 }
             }
         }
 
     }
+
     .none-container {
         width: 100%;
         min-height: 100%;
@@ -110,7 +174,7 @@
         align-items: center;
         justify-content: space-between;
         background: #F4F4F4;
-        padding:0 0 50px 0;
+        padding: 0 0 50px 0;
 
 
         .empty-list {

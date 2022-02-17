@@ -28,7 +28,7 @@ module.exports = {
 
     lintOnSave: false,
     devServer: {
-        host: '192.168.1.55',
+        host: '127.0.0.1',
         port: 80,
         open: true,
         proxy: {

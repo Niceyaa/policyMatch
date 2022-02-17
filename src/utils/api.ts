@@ -94,3 +94,13 @@ export function getTelephone(){
 }
 
 
+
+export function deleteRecord(params){
+  return request({
+    url: '/api/policySubsidy/deleteMatchRecord',
+    method: 'get',
+    params
+  })
+}
+
+

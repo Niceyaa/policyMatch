@@ -12,7 +12,7 @@
         </div>
         <div class="no-content" v-if="!listData">根据你提交的条件，暂无符合的补贴政策。</div>
 
-        <div class="back-wrapper" @click="router.push({path:'/'})">返回</div>
+        <div class="back-wrapper" @click="back">返回</div>
 
     </div>
 
@@ -28,6 +28,9 @@
         setup() {
             let tel = ref(0)
             let recordId = ref(0)
+
+            let isFromRecord = false
+
             const route = useRoute()
             const router = useRouter()
             let reactiveData = reactive({
@@ -35,6 +38,7 @@
             })
             onMounted(() => {
                 document.title = '可补贴政策'
+                isFromRecord = route.query.from
                 initData()
                 getTel()
             })
@@ -56,11 +60,20 @@
             }
 
             function goToUrl(info) {
-                router.push({
+
+                router.replace({
                     path: '/projectDetail',
                     query: {
-                        id: info.policyId
+                        id: info.policyId,
+                        recordId: recordId.value
                     }
+                })
+            }
+
+            function back(){
+                let path = isFromRecord? '/RecordPage':'/'
+                router.replace({
+                    path
                 })
             }
 
@@ -69,8 +82,8 @@
                 tel,
                 listData: toRef(reactiveData, 'listData'),
                 router,
-
-                goToUrl
+                goToUrl,
+                back
             }
         },
     })

@@ -2,7 +2,7 @@
     <div class="app">
         <router-view v-slot="{ Component }">
             <keep-alive v-if="route.meta.keepAlive">
-                <component :is="Component" />
+                <component :is="Component"/>
             </keep-alive>
             <component :is="Component" v-else/>
             <!--<div v-if="route.meta.keepAlive">
@@ -14,17 +14,17 @@
                 <component :is="Component" />
             </div>-->
         </router-view>
-       <!-- <keep-alive>
-            <router-view v-if="route.meta.keepAlive" :key="$route.path"></router-view>
-        </keep-alive>
-        <router-view v-if="!route.meta.keepAlive" :key="route.path"></router-view>-->
+        <!-- <keep-alive>
+             <router-view v-if="route.meta.keepAlive" :key="$route.path"></router-view>
+         </keep-alive>
+         <router-view v-if="!route.meta.keepAlive" :key="route.path"></router-view>-->
         <div v-show="route.meta.showTabBar" class="footer-tab">
-            <router-link to="/" :class="{'tab-item':true,'active':route.name==='Index'}">
+            <router-link replace to="/" :class="{'tab-item':true,'active':route.name==='Index'}">
                 <img class="default-icon" src="./assets/img/icon_policy_normal@2x.png" alt="">
                 <img class="active-icon" src="./assets/img/icon_policy_selected@2x.png" alt="">
                 <div>政策试算</div>
             </router-link>
-            <router-link to="/RecordPage" :class="{'tab-item':true,'active':route.name==='RecordPage'}">
+            <router-link replace to="/RecordPage" :class="{'tab-item':true,'active':route.name==='RecordPage'}">
                 <img class="default-icon" src="./assets/img/icon_record_normal@2x.png" alt="">
                 <img class="active-icon" src="./assets/img/icon_record_selected@2x.png" alt="">
                 <div>试算记录</div>
@@ -82,7 +82,7 @@
 
             const route = useRoute()
 
-            console.log('route',route.meta)
+            console.log('route', route.meta)
 
             const iconPolicy = {
                 active: activePolicyIcon,
@@ -141,6 +141,7 @@
                         }
                     }
                 }
+
                 img {
                     width: 26px;
                     height: 26px;
@@ -156,6 +157,8 @@
                 }
             }
         }
+
+
     }
 
 </style>

@@ -20,7 +20,7 @@
       const router = useRouter()
 
       function goToUrl(id:number) {
-        router.push({
+        router.replace({
           path: `/MatchCondition/${id}`
         })
       }

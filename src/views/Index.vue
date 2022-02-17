@@ -2,7 +2,7 @@
     <div class="home">
         <img class="banner-img" src="../assets/img/banner@2x.png" alt="">
         <div class="home-main">
-            <router-link to="/MatchCondition/1" class="link-item">
+            <router-link replace to="/MatchCondition/1" class="link-item">
                 <div class="sign"></div>
                 <div class="item-left">
                     <img src="../assets/img/icon_prepare@2x.png" alt="">
@@ -13,7 +13,7 @@
                     <img src="../assets/img/icon_enter@2x.png" alt="">
                 </div>
             </router-link>
-            <router-link to="/MatchCondition/4" class="link-item">
+            <router-link replace to="/MatchCondition/4" class="link-item">
                 <div class="sign complete"></div>
                 <div class="item-left complete">
                     <img src="../assets/img/icon_complete@2x.png" alt="">
@@ -27,7 +27,9 @@
         </div>
         <div class="btm-info">
             <div class="info">试算结果仅供参考，具体详情请咨询：</div>
-            <div class="info">三林镇社区事务受理服务中心 服务电话：{{tel}}</div>
+            <div class="info">上海市浦东新区三林镇社区事务受理服务中心</div>
+            <div class="info">服务电话：<a :href="'tel:'+tel">{{tel}}</a></div>
+
         </div>
     </div>
 
@@ -57,7 +59,7 @@
             const router = useRouter()
 
             function goToUrl(id: number) {
-                router.push({
+                router.replace({
                     path: `/MatchCondition/${id}`
                 })
             }
@@ -154,18 +156,25 @@
 
         .btm-info{
             position: fixed;
-            bottom: 70px;
+            bottom: 60px;
             left: 0;
             -margin-top: 18vh;
             width: 100%;
             .info{
+                display: block;
                 text-align: center;
                 font-size: 12px;
                 font-family: PingFangSC-Regular, PingFang SC;
                 font-weight: 400;
                 color: #A9ABAC;
-                margin-bottom: 9px;
+                margin-bottom: 4px;
+                text-decoration: none;
+                a{
+                    text-decoration: none;
+                    color: #039BF9;
+                }
             }
+
         }
 
     }

@@ -1,7 +1,7 @@
 <template>
     <div class="projectDetail">
         <div v-html="dataInfo.snapshot"></div>
-        <div class="back-wrapper" @click="router.back()">返回</div>
+        <div class="back-wrapper" @click="back">返回</div>
     </div>
 
 </template>
@@ -9,7 +9,7 @@
 <script>
     import {getDetail} from "@/utils/api";
     import {useRouter, useRoute} from 'vue-router'
-    import {reactive, defineComponent, onMounted,toRefs} from 'vue'
+    import {reactive, defineComponent, onMounted, toRefs, ref} from 'vue'
 
     export default defineComponent({
         name: 'detail',
@@ -18,15 +18,28 @@
                 snapshot:any,
                 [prop:string]:any
             }*/
+            const recordId = ref(0)
+
             const router = useRouter()
             const route = useRoute()
             let reactiveData = reactive({
-                dataInfo:{}
+                dataInfo: {}
             })
 
             onMounted(() => {
+                recordId.value = route.query['recordId']
                 initData()
             })
+
+
+            function back() {
+                router.replace({
+                    path: '/matchList',
+                    query: {
+                        id: recordId.value
+                    }
+                })
+            }
 
             function initData() {
                 let prm = {
@@ -40,6 +53,8 @@
 
             return {
                 router,
+                recordId,
+                back,
                 ...toRefs(reactiveData)
             }
         },
@@ -57,8 +72,15 @@
         font-size: 14px;
 
 
-        ul{list-style-type:disc; list-style-position:inside;}
-        ol{list-style-type:decimal; list-style-position:inside;}
+        ul {
+            list-style-type: disc;
+            list-style-position: inside;
+        }
+
+        ol {
+            list-style-type: decimal;
+            list-style-position: inside;
+        }
 
         .back {
             font-size: 20px;

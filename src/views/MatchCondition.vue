@@ -1,5 +1,11 @@
 <template>
     <div class="home">
+
+        <div @click="router.replace({path:'/'})" class="back-wrapper">
+            <van-icon name="arrow-left" />
+            <span class="back-btn"> 返回</span>
+        </div>
+
         <div class="condition-item" v-for="(item,idx) in showData" :key="item.id">
             <div class="item-label"><span>*</span>{{item.name}}</div>
             <div class="item-right" @click="changeFlag(idx)">
@@ -9,7 +15,7 @@
         </div>
 
         <div v-show="allData.length>0" class="assessment-btn" @click="goToUrl">立即评估</div>
-        <van-popup v-for="(item,idx) in allData" :show="allFlag[idx]" round position="bottom" :key="item.id">
+        <van-popup v-for="(item,idx) in allData" v-model:show="allFlag[idx]" round position="bottom" closeable :key="item.id">
             <van-cascader
                     :closeable="false"
                     :title="item.name"
@@ -26,7 +32,7 @@
     import {getEnumData, getChildQuestionAnswerNew, policyMatch} from "@/utils/api";
     import {defineComponent, ref, reactive, onMounted, toRefs, computed, watch, watchEffect} from 'vue'
     import {useRoute, useRouter} from 'vue-router'
-    import {Toast, Cascader, Popup} from 'vant'
+    import {Toast, Cascader, Popup,Icon} from 'vant'
     import 'vant/lib/cascader/style/index'
     import 'vant/lib/popup/style/index'
     import 'vant/lib/toast/style/index'
@@ -35,6 +41,7 @@
         name: 'Home',
         components: {
             [Cascader.name]: Cascader,
+            [Icon.name]: Icon,
             [Popup.name]: Popup
         },
         setup() {
@@ -63,7 +70,6 @@
                 allFlag: Array<boolean>,
                 ansData: Array<any>,
                 selectedVal: Array<string>,
-
                 [prop: string]: any
             }
 
@@ -164,18 +170,13 @@
             }
 
             function goToUrl() {
-                console.log('classifyId', classifyId)
-                /*if (arrData.selectedVal.includes('$')) {
-                    Toast('请填写完所有的条件');
-                    return
-                }*/
                 let normalArr = arrData.selectedVal.filter(item=>{
                     return item !== '$'
                 })
-                // console.log(arrData.selectedVal.length)
-                // console.log(normalArr)
-                // console.log(arrData.showData.length)
-                if (normalArr.length !== arrData.showData.length) {
+                console.log(arrData.selectedVal.length)
+                console.log(normalArr)
+                console.log(arrData.showData.length)
+                if (normalArr.length < arrData.showData.length) {
                     Toast('请填写完所有的条件');
                     return
                 }
@@ -190,7 +191,7 @@
                 policyMatch(prm).then(res => {
                     const {data} = res
                     if (data.code === 200) {
-                        router.push({
+                        router.replace({
                             path: '/matchList',
                             query: {
                                 id: data.result.recordId
@@ -203,6 +204,7 @@
             return {
                 classifyId,
                 fieldNames,
+                router,
                 ...toRefs(arrData),
 
                 // showData,
@@ -220,6 +222,11 @@
     .home {
         width: 100%;
         height: 100%;
+
+        .back-wrapper{
+            padding: 15px 20px 0 10px;
+            color: #1989fa;
+        }
 
         .condition-item {
             border-bottom: 1px solid #eee;
@@ -284,6 +291,18 @@
             background: #1989fa;
             color: #fff;
             border-radius: 4px;
+        }
+
+
+        .van-cascader__options {
+            font-size: 16px;
+
+            .van-cascader__option {
+                font-size: 16px;
+            }
+        }
+        .van-cascader__tab{
+            font-size: 16px;
         }
     }
 </style>
